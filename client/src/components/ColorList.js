@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const initialColor = {
@@ -6,10 +6,18 @@ const initialColor = {
   code: { hex: "" }
 };
 
-const ColorList = ({ colors, updateColors }) => {
-  console.log(colors);
+const ColorList = ({ props, colors, updateColors }) => {
+
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+
+  // useEffect(() => {
+  //   const id = colors.match.params.id;
+  //   const colorInArray = colors.find(col => `${col.id}` === id);
+  //   if(colorInArray) {
+  //     setColorToEdit(colorInArray)
+  //   }
+  // }, [colors.match.params.id])
 
   const editColor = color => {
     setEditing(true);
@@ -18,19 +26,34 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-    // Make a put request to save your updated color
-    // think about where will you get the id from...
-    // where is is saved right now?
+    // axios
+    //   .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
+    //   .then(res => {
+    //     console.log('Save Edit', res)
+    //     // props.history.push('/bubblePage')
+    //   })
+    //   .catch(err => {
+    //     console.log('Save Edit Error', err.response)
+    //   })
   };
 
   const deleteColor = color => {
-    // make a delete request to delete this color
+    // axios
+    //   .delete(`http:localhost:5000/api/colors/${colorToEdit.id}`)
+    //   .then(res => {
+    //     console.log('Delete Call', res.data)
+    //     // props.history.push('/bubblePage')
+    //   })
+    //   .catch(err => {
+    //     console.log('Delete Error', err.response)
+    //   })
   };
 
   return (
     <div className="colors-wrap">
       <p>colors</p>
       <ul>
+        {console.log('Colors', colors)}
         {colors.map(color => (
           <li key={color.color} onClick={() => editColor(color)}>
             <span>
