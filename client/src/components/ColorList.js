@@ -23,8 +23,8 @@ const ColorList = ({ colors, updateColors }) => {
       .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
       .then(res => {
         console.log('Save Edit', res);
-        let colorArray = colors.map(color => {
-          if (colorToEdit === color.id) {
+        let colorArray = colors.filter(color => {
+          if (colorToEdit.id === color.id) {
             return res.data;
           } else {
             return color;
