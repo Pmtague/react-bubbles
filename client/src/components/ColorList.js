@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
+import { axiosWithAuth } from "../utils/axiosWithAuth";
 
 const initialColor = {
   color: "",
   code: { hex: "" }
 };
 
-const ColorList = ({ props, colors, updateColors }) => {
+const ColorList = ({ colors, updateColors }) => {
 
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
-
-  // useEffect(() => {
-  //   const id = colors.match.params.id;
-  //   const colorInArray = colors.find(col => `${col.id}` === id);
-  //   if(colorInArray) {
-  //     setColorToEdit(colorInArray)
-  //   }
-  // }, [colors.match.params.id])
 
   const editColor = color => {
     setEditing(true);
@@ -26,27 +19,35 @@ const ColorList = ({ props, colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-    // axios
-    //   .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
-    //   .then(res => {
-    //     console.log('Save Edit', res)
-    //     // props.history.push('/bubblePage')
-    //   })
-    //   .catch(err => {
-    //     console.log('Save Edit Error', err.response)
-    //   })
+    axiosWithAuth()
+      .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => {
+        console.log('Save Edit', res);
+        let colorArray = colors.map(color => {
+          if (colorToEdit === color.id) {
+            return res.data;
+          } else {
+            return color;
+          }
+        })
+        updateColors(colorArray);
+      })
+      .catch(err => {
+        console.log('Save Edit Error', err.response)
+      })
   };
 
   const deleteColor = color => {
-    // axios
-    //   .delete(`http:localhost:5000/api/colors/${colorToEdit.id}`)
-    //   .then(res => {
-    //     console.log('Delete Call', res.data)
-    //     // props.history.push('/bubblePage')
-    //   })
-    //   .catch(err => {
-    //     console.log('Delete Error', err.response)
-    //   })
+    axiosWithAuth()
+      .delete(`http://localhost:5000/api/colors/${color.id}`)
+      .then(res => {
+        console.log('Delete Call', res.data)
+        let newColorArray = colors.filter(col => col.id !== color.id);
+        updateColors(newColorArray);
+      })
+      .catch(err => {
+        console.log('Delete Error', err.response)
+      })
   };
 
   return (
